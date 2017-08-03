@@ -6,61 +6,71 @@ namespace Vizn
 {
     internal class ReportCollection
     {
-        private readonly List<DailyReport> _dailyReports;
+        public List<DailyReport> DailyReports;
+        public int Count;
 
         public ReportCollection()
         {
-            _dailyReports =  new List<DailyReport>();
+            DailyReports =  new List<DailyReport>();
         }
 
         public void Add(DailyReport dr)
         {
-            _dailyReports.Add(dr);
+            DailyReports.Add(dr);
+            Count = DailyReports.Count;
         }
 
         public void Remove(DailyReport dr)
         {
-            _dailyReports.Remove(dr);
+            DailyReports.Remove(dr);
+            Count = DailyReports.Count;
         }
 
         public List<DailyReport> GetDailyReports()
         {
-            return _dailyReports;
+            return DailyReports;
         }
 
         public IEnumerable<DateTime> Dates()
         {
-            return _dailyReports.Select(dr => dr.Date);
+            return DailyReports.Select(dr => dr.Date);
         }
 
-        public IEnumerable<float> Opens()
+        public IEnumerable<double> Opens()
         {
-            return _dailyReports.Select(dr => dr.Open);
+            return DailyReports.Select(dr => dr.Open);
         }
 
-        public IEnumerable<float> Highs()
+        public IEnumerable<double> Highs()
         {
-            return _dailyReports.Select(dr => dr.High);
+            return DailyReports.Select(dr => dr.High);
         }
 
-        public IEnumerable<float> Lows()
+        public IEnumerable<double> Lows()
         {
-            return _dailyReports.Select(dr => dr.Low);
+            return DailyReports.Select(dr => dr.Low);
         }
 
-        public IEnumerable<float> Closes()
+        public IEnumerable<double> Closes()
         {
-            return _dailyReports.Select(dr => dr.Close);
+            return DailyReports.Select(dr => dr.Close);
         }
 
         public IEnumerable<int> Volumes()
         {
-            return _dailyReports.Select(dr => dr.Volume);
+            return DailyReports.Select(dr => dr.Volume);
         }
 
-        public IEnumerable<float> Changes()
+        public IEnumerable<double> Changes()
         {
-            return _dailyReports.Select(dr => dr.Change);
+            return DailyReports.Select(dr => dr.Change);
+        }
+
+        public double MinOpen()
+        {
+            var min = DailyReports[0].Open;
+            min = DailyReports.Select(dr => dr.Open).Concat(new[] { min }).Min();
+            return min;
         }
     }
 }

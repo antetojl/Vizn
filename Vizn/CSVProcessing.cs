@@ -17,17 +17,23 @@ namespace Vizn
                 {
                     while (ie.MoveNext())
                     {
-                        var dateString = ie.Current[0].Split('-');
-                        int day = int.Parse(dateString[0]);
-                        int month = MonthParser(dateString[1]);
-                        int year = 2000 + int.Parse(dateString[2]);
+                        if (ie.Current[0] == null || ie.Current[1] == null || ie.Current[2] == null ||
+                            ie.Current[3] == null || ie.Current[4] == null || ie.Current[5] == null)
+                        {
+                            continue;
+                        }
 
-                        DailyReport dr = new DailyReport(
+                        var dateString = ie.Current[0].Split('-');
+                        var day = int.Parse(dateString[0]);
+                        var month = MonthParser(dateString[1]);
+                        var year = 2000 + int.Parse(dateString[2]);
+
+                        var dr = new DailyReport(
                             new DateTime(year, month, day), //date
-                            float.Parse(ie.Current[1]), //open
-                            float.Parse(ie.Current[2]), //high
-                            float.Parse(ie.Current[3]), //low
-                            float.Parse(ie.Current[4]), //close
+                            double.Parse(ie.Current[1]), //open
+                            double.Parse(ie.Current[2]), //high
+                            double.Parse(ie.Current[3]), //low
+                            double.Parse(ie.Current[4]), //close
                             int.Parse(ie.Current[5])); //volume
                         rc.Add(dr);
                     }

@@ -5,14 +5,14 @@ namespace Vizn
     internal class DailyReport
     {
         public DateTime Date;
-        public float Open;
-        public float High;
-        public float Low;
-        public float Close;
+        public double Open;
+        public double High;
+        public double Low;
+        public double Close;
         public int Volume;
-        public float Change;
+        public double Change;
 
-        public DailyReport(DateTime date, float open, float high, float low, float close, int volume)
+        public DailyReport(DateTime date, double open, double high, double low, double close, int volume)
         {
             Date = date;
             Open = open;
