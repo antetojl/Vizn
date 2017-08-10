@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/charts"
         Title="MainWindow" Height="350" Width="525">
-        
+
     <Grid>
-        <dx:ChartControl x:Name="Graph">
-        </dx:ChartControl>
+        <dx:ChartControl x:Name="Graph" />
     </Grid>
 </Window>

@@ -8,15 +8,21 @@ namespace Vizn
 {
     internal class CSVProcessing
     {
+        /// <summary>
+        ///     Takes in enumerable of csv file., and returns ReportCollection object that is an object entity of the csv file.
+        /// </summary>
+        /// <param name="csv">Enumerable of CSV file.</param>
+        /// <returns>ReportCollection of DailyReport entities.</returns>
         internal static ReportCollection GetReportCollection(IEnumerable<ICsvLine> csv)
         {
-            ReportCollection rc = new ReportCollection();
+            var rc = new ReportCollection();
             try
             {
                 using (var ie = csv.GetEnumerator())
                 {
                     while (ie.MoveNext())
                     {
+                        //makes sure no fields are empty
                         if (ie.Current[0] == null || ie.Current[1] == null || ie.Current[2] == null ||
                             ie.Current[3] == null || ie.Current[4] == null || ie.Current[5] == null)
                         {
@@ -28,6 +34,7 @@ namespace Vizn
                         var month = MonthParser(dateString[1]);
                         var year = 2000 + int.Parse(dateString[2]);
 
+                        //create DailyReport from csv IEnumerable
                         var dr = new DailyReport(
                             new DateTime(year, month, day), //date
                             double.Parse(ie.Current[1]), //open
@@ -45,13 +52,19 @@ namespace Vizn
             }
 
             return rc;
-
         }
 
+        /// <summary>
+        ///     Converts month as abbreviation to number of month.
+        /// </summary>
+        /// <param name="month">Abbreviation of month.</param>
+        /// <returns>Integer representing month #.</returns>
         internal static int MonthParser(string month)
         {
-            int monthAsNumber = 0;
+            var monthAsNumber = 0;
+
             #region switch for month
+
             switch (month)
             {
                 case "Jan":
@@ -91,17 +104,23 @@ namespace Vizn
                     monthAsNumber = 12;
                     break;
             }
+
             #endregion
 
             return monthAsNumber;
         }
 
+        /// <summary>
+        ///     Helper method to read csv file.
+        /// </summary>
+        /// <param name="file">Filepath of csv file.</param>
+        /// <returns>IEnumerable of ICsvLines that have been read.</returns>
         internal static IEnumerable<ICsvLine> ReadCSV(string file)
         {
             var stream = File.OpenRead(file);
             var options = new CsvOptions
             {
-                HeaderMode = HeaderMode.HeaderPresent,
+                HeaderMode = HeaderMode.HeaderPresent
             };
 
             return CsvReader.ReadFromStream(stream, options);

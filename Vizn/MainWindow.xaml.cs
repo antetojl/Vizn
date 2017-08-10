@@ -1,60 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Csv;
+﻿using System.Linq;
 using DevExpress.Xpf.Charts;
 
 //WPF chart control
 namespace Vizn
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
-        private ReportCollection reports;
+        private readonly ReportCollection _reports;
+
         public MainWindow()
         {
+            //reading in csv after initializing WPF
             InitializeComponent();
             var csv = CSVProcessing.ReadCSV("tsla.csv");
-            reports = CSVProcessing.GetReportCollection(csv);
+            _reports = CSVProcessing.GetReportCollection(csv);
 
-            var linearRegression = Calculations.Linear(reports);
+            //Get linear regression
+            var linearRegression = Calculations.Linear(_reports);
 
-            double predict = linearRegression.Transform(reports.Count);
-            double slope = linearRegression.Slope;
-            double intercept = linearRegression.Intercept;
+            //not implemented into this solution
+            var predict = linearRegression.Transform(_reports.Count);
+            var slope = linearRegression.Slope;
+            var intercept = linearRegression.Intercept;
 
+            //creating graph
             var dia = new XYDiagram2D
             {
-                SeriesDataMember = "Change",
-                SeriesTemplate = new BarFullStackedSeries2D()
+                SeriesDataMember = "Open",
+                SeriesTemplate = new LineSeries2D
                 {
                     ArgumentDataMember = "Date",
-                    ValueDataMember = "Change",
+                    ValueDataMember = "Open",
                     DisplayName = "Tesla (TSLA)"
                 },
-                AxisY = new AxisY2D {Title = new AxisTitle {Content = "Percent Changed (%)"}},
-                AxisX = new AxisX2D {Title = new AxisTitle {Content = "Date"}} 
+                AxisY = new AxisY2D
+                {
+                    Title = new AxisTitle {Content = "Price ($)"},
+                    VisualRange = new Range
+                    {
+                        MinValue = _reports.MinOpen()
+                    }
+                },
+                AxisX = new AxisX2D {Title = new AxisTitle {Content = "Date"}}
             };
 
             Graph.Diagram = dia;
-            Graph.DataSource = reports.GetDailyReports().Select(dr => new { dr.Date, dr.Change });
-
+            Graph.DataSource = _reports.GetDailyReports().Select(dr => new {dr.Date, dr.Open});
         }
-
-        
     }
 }
